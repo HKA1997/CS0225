@@ -1,0 +1,4 @@
+relazione
+quando un dispositivo vuole inviare un pacchetto a un dispositivo di un altra rete,il pacchetto viene mandato a un router che si occupa di fare ponte tra le dverse reti.
+questo processo avviene utilizzando l indizzo mac.
+è il router a determinare in quale dispositivo indizzare il pacchetto.
