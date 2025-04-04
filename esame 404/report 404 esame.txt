@@ -1,0 +1,53 @@
+report 4/04 esame
+
+
+
+Pc0 Vlan 10 “segreteria”
+
+Pc1 vlan 20 “magazzino”
+
+Pc2 vlan 30 “vendite”
+
+Pc3 vlan 40 amministrazione
+
+Pc4 vlan 30 contabilità provvigioni
+
+Pc5 vlan 30 ufficio contabile
+
+
+
+Motivazioni per l’uso delle VLAN
+
+1 La vlan permette una migliore sicurezza:
+
+   - Separare i dispositivi in VLAN diverse impedisce che tutto il traffico sia visibile a tutti i dispositivi della rete.  
+
+   - Ad esempio, in questo caso,la VLAN30 non sarà accessibile dagli utenti della VLAn10.
+
+
+
+2 Riduzione del Traffico di Rete 
+
+   - Le VLAN limitano il traffico di broadcast, che altrimenti si diffonderebbe in tutta la rete rallentandola.  
+
+   - Se hai 100 PC in una rete unica, ogni messaggio di broadcast arriva a tutti. Con VLAN, il traffico è limitato solo a dispositivi nella stessa VLAN.  
+
+
+
+3. Gestione più Flessibile
+
+   - Se un utente cambia ufficio, invece di dover ricollegare fisicamente il PC a un’altra rete, basta **assegnarlo alla VLAN corretta** tramite configurazione software.  
+
+
+
+4. Separazione Logica
+
+   - Anche se tutti i dispositivi sono fisicamente collegati allo stesso switch, con le VLAN puoi gestire reparti separati, come:  
+
+     - VLAN 10 → segreteria 
+
+     - VLAN 20 → magazzino
+
+     - VLAN 30 → addetti vendite e contabilità
+
+     - VLAN 40 → amministrazione
