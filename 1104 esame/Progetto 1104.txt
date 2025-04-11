@@ -1,0 +1,94 @@
+Progetto 11/04
+
+
+
+Il codice che fornito è un semplice assistente virtuale testuale,scritto in Python e risponde  a 4 comandi specifici:
+
+1 Qual è la data di oggi :risponde con la data corrente
+
+2 Che ore sono:risponde con l’ora attuale 
+
+3 Come ti chiami_risponde: Mi chiamo Assistente Virtuale
+
+4)un comando speciale per uscire**
+
+- Se l’utente scrive “esci”il programma si interrompe.
+
+Per tutto il resto,se viene inserito un comando non riconosciuto,il programma risponde “non ho capito la tua domanda”
+
+
+
+
+
+
+
+Vi sono inoltre possibili variazioni che il codice non gestisce o non saprebbe come fare
+
+1. Comandi con variazioni minime
+
+Esempio: qual è la data di oggi (senza punto interrogativo o con minuscole il software non capirebbe)
+
+Soluzione:scrivere o tutto in minuscolo o tutto in maiuscolo e aggiungere la possibilità di digitare la domanda senza punto interrogativo nel codice
+
+
+
+
+
+Gli spazi aggiuntivi 
+Esempio:  Che ore sono?  (con spazi prima o dopo il comando non viene riconosciuto
+
+Soluzione:usare il comando .strip per rimuovere spazi inutili
+
+
+
+3. Caratteri non standard o errori di battitura
+
+Ad esempio mettendo 2 punti interrogativi o chiedono una domanda simile ma diversa nella forma
+
+Soluzione:introdurre più vocaboli o un riconoscimento della parola chiave
+
+4. Loop infinito senza uscita visibile
+
+Se l’utente non sa che deve scrivere "esci", resta intrappolato nel loop.
+
+Soluzione:scriverlo all inizio come messaggio iniziale esempio “scrivo esci per chiudere il programma”
+
+lingua della utente
+Bisogna digitare i comandi nella lingua stabilità altrimenti non viene riconosciuto il comando 
+
+Soluzione:Farlo in una lingua standard(esempio L inglese
+
+
+
+Errori di sintassi:
+
+
+
+1. Errore nella chiamata a `datetime.datetoday()`:
+
+   - La funzione corretta per ottenere la data corrente è `datetime.date.today()`,
+
+Correzione : `oggi = datetime.date.today()`
+
+
+
+
+
+2. Errore nel `while True`:
+
+   - Manca il `:` dopo `while True`. 
+
+
+
+
+
+Errori di Logica
+
+
+
+Non vedo particolari errori nello scheletro del codice da un punto di vista logico.
+
+Si potrebbe comunque aggiungere una gestione dei comandi non previsti:
+
+Se l'utente inserisce un comando che non è L gestito dallo script, il programma restituirà una risposta predefinita ("Non ho capito la tua domanda."). Tuttavia, sarebbe utile fornire una risposta più informativa o chiedere all'utente di riprovare.
+
