@@ -1,0 +1,100 @@
+1. Obiettivo dell’esercitazione
+
+
+
+creare una regola firewall che blocchi l'accesso alla DVWA della MV Metasoloitable da parte della MV kali Linux e ne impedisca io scan delle porte
+
+
+
+-bloccare le connessioni HTTP  allaDVWA,
+
+- impedire eventuali scan delle porte
+
+
+
+Questo è stato realizzato tramite una regola firewall configurata su pfSense,agendo da punto di controllo tra le due reti virtuali.
+
+
+
+
+
+2)macchine utilizzate 
+
+
+
+Macchine virtuali utilizzate:
+
+pfSense (Firewall)
+
+-Kali Linux(Attaccante)
+
+- Metasploitable 2(Vittima con DVWA)
+
+
+
+
+
+3)configurazione di rete
+
+Abbiamo modificate le schede di rete e connesso a una rete interna (intnet2) le macchine pfSense e metaspotable2 in modo che passi il traffico.
+
+
+
+Poi abbiamo  configurato gli indirizzi Ip nella macchina PfSense e poi rispettivamente nelle macchina di Kali e metaspotable2.
+
+
+
+3) Attività svolte
+
+
+
+a. Configurazione pfSense:
+
+- Accesso tramite console per l’assegnazione delle interfacce
+
+- Assegnazione indirizzi IP statici
+
+- Disattivazione del DHCP
+
+- Accesso al web da Kali (via http://192.168.10.1)
+
+
+
+b. Verifica connettività:
+
+- Eseguiti test ping tra Kali e Metasploitable per verificare che il traffico passi correttamente tramite pfSense.
+
+
+
+c. Creazione delle regole firewall:
+
+All’interno della GUI di pfSense:
+
+- Aggiunta una regola di tipo Block nella tabella LAN per bloccare:
+
+  - il traffico TCP verso la porta 80(DVWA),
+
+  - e tutto il traffico in uscita da Kali verso Metasploitable (per evitare scansioni).
+
+D) si lancia un nmap da Kali verso Kali e le porte non dovrebbero essere visibili e il DVWA non è raggiungibile
+
+
+
+
+
+
+
+4) Conclusione
+
+
+
+L’esercitazione ha mostrato:
+
+- Come segmentare una rete in ambienti virtuali con VirtualBox
+
+- Come utilizzare pfSense come firewall/router tra due LAN
+
+- Come bloccare specifici servizi o accessi tra host
+
+- L’importanza della configurazione corretta
+
