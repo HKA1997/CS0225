@@ -1,0 +1,81 @@
+report lewis Hamilton
+
+
+
+Fasi dell’analisi
+
+
+
+1. Avvio di Maltego
+
+   - Apertura di Maltego su Kali Linux.
+
+   - Creazione di un nuovo graph.
+
+
+
+2. Inserimento dell'entità "Person":
+
+   - Entità inserita: `Lewis Hamilton Carl Davidson.
+
+   - Aggiunta manuale del campo “alias” o “nome completo”.
+
+
+
+3)tramite Google ricerche su “Lewis Hamilton mail”,”Lewis Hamilton investimenti”,Lewis Hamilton manager”,Lewis Hamilton borsa”
+
+Ricerca effettuata in inglese e italiano.
+
+
+
+4. Risultati ottenuti:
+
+   - Sono stati trovati i seguenti profili ufficiali (verificati da trasformazioni e verifica incrociata):
+
+Abbiamo trovato diversi profili social dove pubblica fondamentalmente partnership o corse.
+
+Tramite Google invece siamo riusciti a localizzare la città in cui vive e la sua passione per gli investimenti immobiliari.
+
+
+
+5. Informazioni estratte (attività recente):
+
+
+
+- Transformation usate:
+
+  - `Search Social Networks`
+
+  - `To Domains from Email`
+
+  - `To Website using Alias`
+
+  - `To URLs from Name`
+
+
+
+- Strumenti usati
+
+  - Maltego Community Edition
+
+  - Analisi incrociata su google 
+
+
+
+---
+
+
+
+Conclusione
+
+
+
+Maltego si è dimostrato utile per raccogliere dati OSINT strutturati e verificare la presenza digitale di Lewis Hamilton,ma Google mi ha dato gli articoli necessari a comprendere le sue passioni al di fuori del mondo delle corse.
+
+La sua attività principale restano le corse,gli accordi con i vari brand e gli investimenti immobiliari.
+
+Il mio obbiettivo era da un punto di vista finanziario,volevo comprendere i suoi interessi,patrimonio,e dove investiva i suoi soldi per poter proporre e inserirmi in una delle sue opzioni.
+
+A tal fine la ricerca è stata indirizzata verso ciò che poteva essere meno a porte chiuse rispetto al mondo automobilistico e quindi meno inclusivo.
+
+L idea immobiliare,mi è sembrata la migliore tra cio che ho trovato.
