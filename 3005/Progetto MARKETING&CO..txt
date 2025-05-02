@@ -1,0 +1,91 @@
+Progetto MARKETING&CO.
+
+Pishing
+
+Contesto:
+
+Mi fingo un consulente di marketing e necessito di creare un primo contatto con un imprenditore.
+
+Gli unici contatti e informazioni trovate sono state reperite su Google o sul sito dell azienda e non ho idea se mi risponderà lui o la sua segretaria.
+
+Ho trovato numero di telefono e mail aziendale.
+
+
+
+
+
+
+
+Obiettivo:puntiamo a fare un primo contatto e incuriosire in modo tale che possiamo fissare un appuntamento  per vendergli un sevizio,e in un secondo luogo fargli firmare un contratto dove ci lascerà tutti i suoi dati sensibili e in seguito farà un bonifico in un conto che forniremo dopo la firma del contratto.
+Il nostro targetsono tutti quei imprenditori edili che non hanno un sito o buona presenza online.
+ho scelto gli imprenditori edili perché spesso hanno budget e possono dedurre spese importanti come materiale pubblitario,inoltre spesso(soprattutto in aziende medio piccole)mostrano buone capacita di lavoro ma scarse nozioni sulle nuove tecnologie.
+
+
+
+
+La mail:
+
+
+
+Oggetto:Report digitale personalizzato per la sua impresa edile
+
+
+
+ Salve Sig. Rossi,
+
+sono Giovanni Bianchi, consulente senior di Marketing&Co,agenzia specializzata nel supporto digitale per aziende edili.  
+
+La contatto in merito al report di analisi personalizzato che le abbiamo inviato la scorsa settimana riguardo alla digitalizzazione dei processi per imprese del settore edile.   
+
+Non avendo ancora ricevuto un suo riscontro, le inoltro nuovamente l’accesso al file.  
+
+[link report](disponibile solo per 72 ore)  
+
+
+
+Resto a disposizione per un breve confronto telefonico nei prossimi giorni.  
+
+Cordiali saluti,
+
+Giovanni Bianchi
+
+Consulente Digitale – Marketing&Co
+
+
+
+
+
+
+
+La mail potrebbe essere credibile perché:
+
+1. Tono professionale e credibile: Il linguaggio è coerente con quello di un’agenzia di consulenza reale.
+
+2. Target specifico:L’uso di un settore preciso (aziende edili) rende il messaggio più mirato e realistico.
+
+3. Urgenza temporale:Il link "disponibile solo per 72 ore" spinge il destinatario ad agire in fretta.
+
+4. Finta continuità:Il riferimento a un “messaggio già inviato” abbassa le difese, facendo credere che si tratti di un seguito legittimo.
+
+5. Invito al clic:Il link per “scaricare il report” è il classico punto di attacco, che in uno scenario reale porterebbe a un sito fake o scaricherebbe malware.
+
+
+
+
+
+
+
+Campanelli di allarme 
+
+1)urgenza e pressione sul report
+
+2)nessun credito o recensione come agenzia di marketing(potrebbe cercare su trustpilot o voler chiedere più info sull azienda che non sono state specificate,come sede legale ad esempio)
+
+3)nessuna credibilità da parte del consulente e nessuna possibilità di dimostrarla
+
+4)nessun reale interessamento alla digitalizzazione,quindi il cliente sa che non ha mai chiesto info sul servizio.
+
+5)troppo generico,arma a doppio taglio:
+
+Nel report daremo dei semplici feedback ad esempio su dominio,keywords ecc.. in modo tale che lui senta un vantaggio nel sedersi nuovamente al tavolo con noi.
+Ma allo stesso potrebbe farci percepire come non all altezza o far venire il dubbio se hanno un reparto interno di marketing.
