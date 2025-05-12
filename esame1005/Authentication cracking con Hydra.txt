@@ -1,0 +1,14 @@
+Authentication cracking con Hydra: 
+
+Come primo passaggio ho creato l’utente test_user e configurato una password. Questo sarà 
+l’utente vittima.  
+Attivazione del servizio ssh per permettere il corretto svolgimento dell’attacco. 
+Test della connessione ssh dell’utente appena creato con il comando: ssh 
+test_user@192.168.1.192
+
+
+ Ho creato una mia lista prendendo le prime 20 componenti della lista utilizzata in 
+precedenza e aggiunto utente e password corretti all’interno della mia lista: 
+
+
+Risultato: è riuscito a trovare nome utente e password
