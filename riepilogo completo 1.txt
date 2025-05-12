@@ -1,0 +1,23 @@
+riepilogo completo 
+
+	1.	Individuazione del bersaglio
+
+Dopo aver messo in ascolto lo scanner di rete, abbiamo riconosciuto che l’unico host virtuale di VirtualBox attivo nella nostra rete era quello con indirizzo 192.168.1.25. Questo ci ha confermato che la macchina “BSides Vancouver 2018” era effettivamente il nostro obiettivo.
+	
+2.	Mappatura dei servizi in esecuzione
+Con una scansione approfondita delle porte abbiamo scoperto tre servizi principali: un server FTP, un server SSH e un server web Apache. Il server FTP mostrava chiaramente di essere un’istanza di vsftpd in versione 2.3.5, con l’accesso anonimo abilitato; l’SSH era gestito da una versione datata di OpenSSH; il server web, infine, esponeva una directory protetta da un file “robots.txt” che suggeriva la presenza di un backup di WordPress.
+	
+3.	Accesso anonimo e raccolta iniziale
+Sfruttando la possibilità di collegarsi al server FTP senza credenziali, abbiamo navigato nella cartella pubblica e identificato al suo interno un piccolo file di backup chiamato “users.txt.bk”. Anche se il tentativo diretto di scaricarlo via FTP è stato ostacolato da problematiche di modalità di trasferimento, abbiamo comunque confermato che quel file era disponibile e merita di essere recuperato.
+	
+4.	Verifica di vulnerabilità note
+Parallelamente, abbiamo controllato se il server SMB fosse esposto a EternalBlue (la vulnerabilità nota come MS17-010) e abbiamo accertato che la macchina non presentava tale falla. Questo ci ha costretto a concentrare l’attenzione su FTP e HTTP piuttosto che su exploit SMB.
+Una volta provato il servizio ftp,ho trovato il file di users.txt e ho pensato di fare un attacco al servzio ssh con la serie di utenti scaricati dal surser.txt con lo strumento hydra.
+Una volta provato ad avere attaccato il servizio ssh ho notato che non poteto autentificarmi tramite pw ma avevo bisogno di una chiave pubblica,quindi ho provato ad attaccare il srvizio http.
+
+
+Sono riuscita ad individuare l’username corretto tramite il comando per Hydra per attaccare 
+tramite URL,dopo vari tentativi con liste di password sono arrivata a quella che è riuscita a 
+trovarmi la soluzione 
+
+Non sono ancora arrivato a capo dell esercizio,ci ho riprovato 2 volte ma sto ancora tentando,DURANTE IL PERCORSO ho litigato 3/4 volte con Imperia(la mia chatGPT).
