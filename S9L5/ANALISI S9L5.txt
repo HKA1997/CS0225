@@ -1,0 +1,152 @@
+ANALISI degli indicatori di compromissione
+
+contesto della Cattura di Rete:
+L'analisi si basa sui pacchetti di traffico di rete catturati, che mostrano una comunicazione tra due indirizzi IP interni: 192.168.200.100 (identificato come l'aggressore/scanner) e 192.168.200.150 (identificato come la vittima/target).
+
+1. Identificazione e Analisi degli IOC (Indicatori di Compromissione)
+Gli IOC rilevati indicano chiaramente una fase di ricognizione attiva e tentativi di accesso da parte di 192.168.200.100 verso 192.168.200.150.
+IOC di Ricognizione Attiva (Scansione di Porte):
+* Pattern di Scansione Sistematico: 192.168.200.100 sta eseguendo una scansione di porte metodica su 192.168.200.150. Questo è evidenziato da molteplici tentativi di connessione TCP ([SYN]) a diverse porte, seguiti dalle relative risposte.
+    * Tentativi a Porte Legittime/Comuni:
+        * Porta 80 (HTTP): Pacchetto 2 (SYN), Pacchetto 31 (SYN). L'attaccante tenta di connettersi a un server web non crittografato.
+        * Porta 443 (HTTPS): Pacchetto 14 (SYN). Tentativo di connessione a un server web sicuro.
+    * Tentativi a Porte di Servizi Specifici:
+        * Porta 111 (Portmapper/RPCbind): Pacchetto 13 (SYN). Tentativo di connessione a un servizio di mappatura porte RPC.
+    * Tentativi a Porte Meno Comuni/Sconosciute:
+        * Porta 1007: Pacchetto che precede il 99 (SYN non fornito ma inferito).
+        * Porta 58 (XNS Courier): Pacchetto che precede il 132 (SYN non fornito ma inferito).
+* Risposte della Vittima (192.168.200.150):
+    * [SYN, ACK] (Porta Aperta):
+        * Pacchetto 19: Risposta da porta 23 (Telnet). IOC CRITICO: Indica che il servizio Telnet è attivo e in ascolto.
+        * Pacchetto 4: Risposta da porta 80 (HTTP). Indica che un server HTTP è attivo.
+        * Pacchetto 36: Risposta da porta 80 (HTTP) (per la seconda connessione).
+        * Pacchetto 20: Risposta da porta 111 (Portmapper). Indica che il servizio Portmapper è attivo.
+    * [RST, ACK] (Porta Chiusa o Filtrata):
+        * Pacchetto 99: Risposta da porta 1007.
+        * Pacchetto 132: Risposta da porta 58. Questi indicano che le rispettive porte non hanno un servizio in ascolto o sono filtrate.
+IOC di Connessioni TCP Stabilite (Proseguimento Ricognizione/Accesso):
+* Handshake Completo HTTP (Connessioni Multiple):
+    * Pacchetto 6: [ACK] da 192.168.200.100 verso porta 80, completando il primo handshake TCP (iniziato con il Pacchetto 2 e la risposta Pacchetto 4). Connessione HTTP stabilita.
+    * Pacchetto 38: [ACK] da 192.168.200.100 verso porta 80, completando il secondo handshake TCP (iniziato con il Pacchetto 31 e la risposta Pacchetto 36). Seconda connessione HTTP stabilita.
+* Handshake Completo Portmapper:
+    * Pacchetto 25: [ACK] da 192.168.200.100 verso porta 111, completando l'handshake TCP (iniziato con il Pacchetto 13 e la risposta Pacchetto 20). Connessione Portmapper stabilita.
+* Chiusura di Connessioni da Parte dell'Attaccante:
+    * Pacchetto 41: [RST, ACK] da 192.168.200.100 chiude la seconda connessione HTTP (sorgente 53062).
+    * Pacchetto 34: [RST, ACK] da 192.168.200.100 chiude la connessione Portmapper (sorgente 56120).
+    * Questo indica che l'attaccante, dopo aver stabilito la connessione e probabilmente effettuato una rapida verifica o una query iniziale, ha deciso di chiudere la sessione per passare ad altro o perché non ha trovato immediato interesse.
+Riassumendo gli IOC Chiave:
+1. IP Attaccante: 192.168.200.100
+2. IP Vittima: 192.168.200.150
+3. Attività di Scansione Porte: Ampia gamma di porte sondate.
+4. Servizi Aperte Identificati:
+
+• Le porte che vediamo come aperte sono:
+- 23 → Telnet
+- 111→ RCP
+- 21→ FTP
+- 80 →http
+- 22→ SSH
+- 512→rexec (remote execution)
+- 513→login
+- 514→Syslog
+- 445→microsoft-DS (Directory services)
+- 139→NetBIOS Session Service
+- 25→SMTP (Simple Mail Transfer Protocol)
+-53->DNS
+
+
+
+
+
+2. Ipotesi sui Potenziali Vettori di Attacco Utilizzati
+Basandosi sugli IOC trovati, le ipotesi sui vettori di attacco sono le seguenti:
+* Vettore Primario e Imminente: Sfruttamento di Telnet (Porta 23)
+    * Perché: Telnet è un protocollo obsoleto che trasmette tutte le comunicazioni, incluse le credenziali di accesso (username e password), in chiaro (plaintext).
+    * Ipotesi: L'attaccante ha identificato la porta 23 aperta e quasi certamente tenterà di:
+        * Attacco a forza bruta: Provare combinazioni comuni o deboli di username e password.
+        * Esecuzione di comandi remoti: Una volta ottenuto l'accesso, l'attaccante può eseguire comandi arbitrari sulla macchina 192.168.200.150, portando a una compromissione completa.
+        * Installazione di Malware: Una volta dentro, l'attaccante potrebbe scaricare ed eseguire malware (es. il loader XOR menzionato nel contesto iniziale, sebbene non visto nel traffico).
+* Vettore Secondario: Sfruttamento di Servizi Web (HTTP su Porta 80)
+    * Perché: La porta 80 è aperta e le connessioni HTTP sono state stabilite. Sebbene l'attaccante abbia chiuso rapidamente una connessione, l'altra potrebbe essere stata usata per un'analisi iniziale.
+    * Ipotesi: L'attaccante potrebbe tentare di:
+        * Enumerazione del contenuto web: Scoprire pagine di amministrazione, directory nascoste, file di configurazione sensibili, o versioni di CMS/web server vulnerabili.
+        * Vulnerabilità delle applicazioni web: Attacchi come SQL Injection, Cross-Site Scripting (XSS), Directory Traversal (es. ../../etc/passwd), File Inclusion, o tentativi di upload di web shell (per ottenere esecuzione di codice remoto).
+        * Sfruttamento di vulnerabilità del server web: Se il software del server HTTP è obsoleto o ha vulnerabilità note.
+* Vettore Potenziale: Sfruttamento di Servizi RPC/NFS (Portmapper su Porta 111)
+    * Perché: La porta 111 (Portmapper) è aperta e la connessione è stata stabilita.
+    * Ipotesi: L'attaccante potrebbe tentare di:
+        * Enumerazione di servizi RPC/NFS: Interrogare Portmapper per identificare altri servizi RPC/NFS in esecuzione e le loro vulnerabilità associate.
+        * Sfruttamento di vulnerabilità specifiche: Se versioni vulnerabili di Portmapper o dei servizi RPC mappati sono presenti.
+* Fase Iniziale di Tutti i Vettori: Ricognizione Attiva (Scansione di Porte)
+    * L'intero pattern di traffico è una fase di ricognizione approfondita. L'attaccante non sta "sparando alla cieca" ma sta attivamente mappando la superficie d'attacco per trovare il punto più debole da cui iniziare l'intrusione.
+
+
+
+
+
+
+
+3. Azioni per Ridurre gli Impatti dell'Attacco Attuale ed Eventualmente un Simile Attacco Futuro
+A. Azioni Immediate (Risposta all'Attacco in Corso):
+1. Monitoraggio Immediato e Intensificato:
+    * Telnet (Porta 23): Questo è il punto più critico. Filtra il traffico TCP sulla porta 23 e utilizza la funzione "Follow TCP Stream" di Wireshark. Cerca immediatamente prove di credenziali (username, password) in chiaro e comandi eseguiti dall'attaccante. Questa è la prova diretta di una compromissione.
+    * HTTP (Porta 80): Filtra il traffico HTTP e "segui" gli stream TCP. Cerca richieste GET o POST sospette (es. URI insoliti, tentativi di directory traversal, upload di file, esfiltrazione di dati).
+    * Portmapper (Porta 111): Filtra per rpc o nfs su questa porta. Cerca query di enumerazione o tentativi di interazione insoliti.
+2. Isolamento della Macchina Vittima (192.168.200.150): Se si osservano prove di compromissione effettiva (es. login Telnet riuscito, esecuzione di comandi, upload di file malevoli), isolare immediatamente 192.168.200.150dalla rete. Questo può essere fatto disattivando l'interfaccia di rete virtuale o bloccando il suo traffico in uscita a livello di firewall. Questo previene ulteriori danni e la propagazione dell'attacco.
+3. Blocco dell'Attaccante (192.168.200.100): Aggiungi regole al firewall per bloccare tutto il traffico in entrata e in uscita da/verso l'indirizzo IP 192.168.200.100.
+B. Azioni per il Futuro (Prevenzione e Hardening):
+1. Disabilitare/Rimuovere Telnet: Questa è la massima priorità. Il servizio Telnet non dovrebbe mai essere abilitato o esposto su alcun sistema. Disinstallalo o disabilitalo immediatamente su 192.168.200.150 e su qualsiasi altro host della rete.
+2. Utilizzare SSH (Secure Shell) per l'Accesso Remoto: Se l'accesso remoto è necessario, implementa e forza l'uso di SSH (porta 22), che crittografa tutto il traffico. Configura SSH in modo sicuro (autenticazione basata su chiavi, disabilita il login root, limita gli utenti autorizzati).
+3. Implementare una Politica Firewall "Deny by Default":
+    * Firewall Host-Based (192.168.200.150): Configura il firewall del sistema operativo per consentire esplicitamente solo le porte e i protocolli strettamente necessari. Tutte le altre porte devono essere bloccate per impostazione predefinita.
+    * Firewall di Rete: Se presente, implementa un firewall di rete per segmentare la rete e controllare il traffico tra le zone, bloccando in particolare il traffico in entrata non autorizzato.
+4. Hardening dei Servizi Web (HTTP/HTTPS):
+    * Patch Management: Mantieni il server web e tutte le applicazioni web sempre aggiornate all'ultima versione per correggere vulnerabilità note.
+    * Forza HTTPS: Abilita HTTPS (porta 443) con un certificato SSL/TLS valido e reindirizza tutto il traffico dalla porta 80 alla 443 per garantire la crittografia.
+    * Web Application Firewall (WAF): Considera l'implementazione di un WAF per proteggere le applicazioni web da attacchi comuni (es. SQLi, XSS, upload malevoli).
+    * Minimizzazione della Superficie: Disabilita moduli o funzionalità non necessarie del server web e rimuovi file/directory di default non utilizzati.
+5. Minimizzazione dell'Esposizione di Portmapper (RPCbind):
+    * Se il servizio Portmapper (porta 111) non è strettamente necessario, disabilitalo. Se è indispensabile, assicurati che sia accessibile solo da indirizzi IP autorizzati e che i servizi RPC/NFS mappati siano anch'essi configurati in modo sicuro e aggiornati.
+6. Sistemi di Rilevamento Intrusioni (IDS/IPS): Implementa un IDS/IPS per rilevare e, idealmente, bloccare automaticamente scansioni di porte, tentativi di accesso a servizi vulnerabili e altri pattern di attacco noti.
+7. Patch Management Completo e Regolare: Assicurati che tutti i sistemi operativi, i servizi e le applicazioni su 192.168.200.150 (e su tutti gli altri host) siano costantemente aggiornati con le patch di sicurezza più recenti.
+8. Politiche di Password Forti e MFA: Implementa politiche di password complesse, autenticazione multi-fattore (MFA) ove possibile e meccanismi di blocco degli account dopo tentativi di login falliti.
+9. Logging e Monitoraggio Centralizzato: Assicurati che i log di sistema e applicativi siano abilitati, centralizzati e monitorati regolarmente per attività sospette.
+
+
+Osservazioni sulla porta 80,utilizza spessa per attacchi
+
+Report sulla Porta 80 (HTTP) nella Cattura di Rete
+Contesto: La porta 80 è la porta standard utilizzata dal protocollo HTTP (Hypertext Transfer Protocol), impiegato per la comunicazione web non crittografata.
+Indirizzi IP Coinvolti:
+* 192.168.200.100: Identificato come l'indirizzo IP dell'attaccante/scanner.
+* 192.168.200.150: Identificato come l'indirizzo IP della vittima/target.
+Evidenze Rilevate (IOC - Indicatori di Compromissione):
+1. Porta 80 Aperta:
+    * L'attaccante (192.168.200.100) ha inviato pacchetti di richiesta di connessione (SYN) alla porta 80 di 192.168.200.150 (evidenziato dai pacchetti 2 e 31).
+    * La vittima (192.168.200.150) ha risposto con pacchetti di sincronizzazione/riconoscimento (SYN, ACK) dalla porta 80 (evidenziato dai pacchetti 4 e 36). Questo conferma che la porta 80 è aperta su 192.168.200.150 e che un server HTTP è in ascolto e pronto a rispondere.
+2. Connessioni HTTP Stabilite (e una Terminata Bruscamente):
+    * Prima Connessione: L'attaccante ha completato l'handshake TCP a tre vie inviando un pacchetto ACK alla porta 80 (pacchetto 6). Questa connessione è stata stabilita con successo.
+    * Seconda Connessione: Similmente, l'attaccante ha completato un secondo handshake TCP a tre vie inviando un altro pacchetto ACK alla porta 80 (pacchetto 38). Anche questa seconda connessione è stata stabilita con successo.
+    * Terminazione Bruscamente: Dopo aver stabilito la seconda connessione, l'attaccante ha inviato un pacchetto RST, ACK (pacchetto 41) dalla sua porta sorgente alla porta 80, terminando bruscamente la connessione. Questo comportamento può indicare una scansione rapida (solo per confermare l'apertura e la risposta) o la mancanza di interesse immediato nel proseguire l'interazione per quella specifica sessione.
+
+Azione Consigliata per Ridurre gli Impatti :
+* Immediato:
+    * Analizzare il Traffico HTTP Applicativo: Poiché le connessioni sono state stabilite, è fondamentale esaminare il traffico successivo sulla porta 80. Utilizzare la funzione "Follow TCP Stream" di Wireshark sui pacchetti HTTP (specialmente quelli sulla prima connessione, dato che la seconda è stata chiusa rapidamente) per visualizzare le richieste GET o POST dell'attaccante e le risposte del server. Questo rivelerà cosa l'attaccante sta cercando o tentando di fare.
+
+
+Conclusioni e obiettivi:
+1.L obbiettivo della macchina attaccante è Mappare la Superficie d'Attacco (Ricognizione/Scansione di Porte):
+
+L'attaccante sta eseguendo una scansione di porte sistematica e dinamica su 192.168.200.150. Questo è evidente dal gran numero di tentativi di connessione (SYN) a diverse porte e dalle risposte corrispondenti (SYN, ACK per aperte, RST, ACK per chiuse).
+L'obiettivo di questa fase è scoprire quali servizi sono in ascolto sulla macchina vittima, quali porte sono aperte e quali sono chiuse, per identificare potenziali punti deboli o d'ingresso.
+
+
+
+2. Identificare Servizi Vulnerabili o Sfruttabili:
+
+Servizio Telnet (Porta 23): Questa è la scoperta più critica per l'attaccante. Il fatto che la porta 23 sia aperta (SYN, ACK ricevuto) è una "bandiera rossa" enorme. L'attaccante sta cercando di ottenere accesso remoto non autorizzato tramite Telnet, perché sa che è un protocollo insicuro che trasmette credenziali e comandi in chiaro. Se l'attaccante riesce a completare l'handshake e inviare dati, è quasi certo che stia tentando un login a forza bruta o l'esecuzione di comandi.
+Servizio HTTP (Porta 80): La macchina attaccante ha stabilito connessioni HTTP e, in almeno un caso, le ha chiuse rapidamente. Questo indica che sta sondando il server web per:
+Enumerare il contenuto: Cercare pagine di login, directory sensibili, file di configurazione o backup.
+Identificare la versione del server/CMS: Scoprire software specifici con vulnerabilità note.
+Cercare vulnerabilità web applicative: Testare per SQL Injection, XSS, upload di file malevoli o altre falle nelle applicazioni web in esecuzione.
+Servizio Portmapper (Porta 111): Anche questa porta è stata trovata aperta e la connessione è stata stabilita. L'attaccante sta probabilmente cercando di enumerare altri servizi RPC (Remote Procedure Call) o NFS (Network File System) che potrebbero essere in esecuzione, che a loro volta potrebbero avere vulnerabilità sfruttabili.
