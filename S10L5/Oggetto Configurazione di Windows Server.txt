@@ -1,0 +1,246 @@
+Oggetto: Configurazione di Windows Server 2022
+
+In questo report descrivo nel dettaglio il processo che ho seguito per installare Windows 
+Server 2022 all’interno di una macchina virtuale VirtualBox, inclusa la procedura per 
+installare le Guest Additions, fondamentali per migliorare l'integrazione tra il sistema host e 
+la macchina virtuale.
+
+1)
+• File ISO di Windows Server 2022 
+• Un sistema host con almeno 8 GB di RAM e 50 GB di spazio libero
+
+
+2)
+Per avviare rapidamente la creazione della VM: 
+• Ho trascinato il file ISO di Windows Server 2022 dal desktop nella finestra di 
+VirtualBox 
+• VirtualBox ha riconosciuto automaticamente il file e ha avviato la procedura guidata 
+per creare la macchina virtuale 
+
+3)
+
+Nella procedura guidata ho impostato: 
+• Nome della VM: Windows Server Esame 
+• Versione: Windows 2022 (64-bit) (rilevata automaticamente) 
+• Ho saltato l’installazione non supervisionata per eseguire tutte le fasi manualmente 
+
+
+4)
+Ho, quindi, configurato: 
+• RAM: 4096 MB 
+• Processori: 6 core
+
+5)
+ Disco virtuale 
+• Tipo: VDI (VirtualBox Disk Image) 
+• Archiviazione: dinamicamente allocata 
+• Dimensione: 50 GB
+
+6)
+ Attivazione delle funzionalità di integrazione 
+Prima dell’avvio della VM, in Impostazioni > Generale > Avanzate, ho attivato: 
+•  Appunti condivisi: Bidirezionale 
+•  Trascinamento file: Bidirezionale
+e  impostata la Scheda 1 in modalità "Rete Interna" 
+
+7)
+Avvio dell’installazione 
+Una volta avviata la VM, è partita automaticamente l’installazione da ISO. È apparsa la 
+schermata iniziale di setup di Windows Server 2022.
+
+8)
+Selezione lingua e formati 
+Alla prima schermata ho mantenuto: 
+• Language: English (United States) 
+• Time and currency format: Italian (Italy) 
+• Keyboard layout: Italian
+9)
+Scelta dell’edizione 
+Tra le edizioni disponibili ho scelto: 
+Windows Server 2022 Datacenter Azure Edition (Desktop Experience)
+
+10)
+Licenza e tipo installazione 
+• Ho accettato i termini della licenza 
+• Ho selezionato Custom: Install Windows only (advanced)
+
+11)
+L’installazione ha richiesto circa 15 minuti, al termine dei quali il sistema si è riavviato 
+automaticamente e poi  creazione utente 
+Alla prima configurazione ho impostato: 
+• Nome utente: Administrator (predefinito) 
+• Una password sicura conforme ai requisiti di Windows 
+
+INSTALLAZIONE DELLE GUEST ADDITION
+
+1)
+ Inserimento del CD virtuale 
+Dalla finestra della VM ho selezionato: 
+• Dispositivi > Inserisci immagine CD delle Guest Additions 
+ Avvio installazione 
+In Esplora file > Questo PC, ho aperto il CD VBox e lanciato: 
+ VBoxWindowsAdditions.exe
+
+2)
+Riavvio della macchina
+
+1)Configurazione iniziale del server BANCASERVER
+Dopo aver completato l’installazione della macchina virtuale con Windows Server, il 
+primo passo fondamentale è stato assegnare un indirizzo IP fisso alla macchina.
+ In particolare, useremo questo IP anche come 
+DNS, dato che il server stesso svolgerà questo ruolo. 
+Per assegnare l’IP fisso ho aperto il menu Start e cliccato su Settings, poi su Network & 
+Internet, quindi su Ethernet. 
+Con il tasto destro ho aperto le Properties della scheda di rete 
+e selezionato TCP/IPv4. Qui ho impostato i seguenti valori: 
+• Indirizzo IP: 192.168.101.10
+• Gateway predefinito: 192.168.101.254 
+• DNS preferito: 192.168.101.10
+Per lanciare il prompt, ho cliccato sull’icona della lente di ingrandimento nella barra delle 
+applicazioni, digitato cmd e selezionato il Prompt dei comandi. Nella finestra nera ho 
+digitato il comando ipconfig /all e verificato che l’output riportasse correttamente le 
+informazioni configurate.
+
+3)
+Modifica del nome del computer 
+Dalla dashboard di Windows Server, ho cliccato su Local Server e poi sulla voce relativa al 
+Computer Name. Ho deciso di chiamare il nostro server BANCAServer,  Dopo aver inserito il nuovo nome 
+nella finestra Computer Name/Domain Changes, il sistema ha richiesto un riavvio. Ho 
+confermato cliccando su OK e riavviato la macchina.
+HO scelto un ambiente bancario ispirato alla serie tv che parla di finanza "DIAVOLI",
+in realtà lo scopo dell'esercizio non rispecchiava perfettamente il contesto ma me ne sono accorto dopo.
+
+4)
+Impostazione del fuso orario corretto 
+Una volta riavviato, ho notato che l’orario nella barra delle applicazioni non era corretto: 
+rifletteva ancora il fuso orario del Pacifico. Per correggerlo, sono andato su Settings > Time 
+and Language > Date and Time e, dal menù a tendina, ho selezionato (UTC +01:00) Rome. 
+Ora il server riporta correttamente l’orario locale.
+
+5)
+
+Installazione di Active Directory 
+Prima di procedere con l’installazione, è utile ricordare cos’è Active Directory: si tratta di un 
+servizio fondamentale nei sistemi Windows Server che consente di gestire utenti, gruppi, 
+permessi e risorse in rete. Senza di esso, non sarebbe possibile avere un controllo 
+centralizzato della rete. 
+Per installarlo ho cliccato su Manage > Add Roles and Features, quindi ho seguito questi 
+passaggi: 
+• Next nella schermata introduttiva 
+• Lasciato selezionato Role-based or feature-based installation
+
+6)
+
+Creazione della foresta e del dominio 
+Una foresta in Active Directory rappresenta la struttura più alta: un insieme di domini che 
+condividono una configurazione, uno schema e una fiducia reciproca. All’interno della 
+foresta, ogni dominio è come un sottoinsieme, con utenti e risorse proprie. 
+(Qui è previsto uno schema visivo che illustra: Foresta → Domini → OU → Utenti/Computer) 
+Un dominio, invece, è l’unità di base in cui vengono gestite tutte le risorse (utenti, gruppi, 
+computer). 
+Ho cliccato quindi sulla bandierina con triangolo giallo e selezionato Promote this server to 
+a domain controller. Dalla finestra Deployment Configuration, ho scelto Add a new forest 
+e inserito come nome della foresta BANCA.local.
+
+7)
+Creazione di utenti e gruppi 
+Prima di procedere, una breve spiegazione: 
+• Utenti: rappresentano gli account che accedono al sistema 
+• Group Policy: sono regole centralizzate per gestire cosa gli utenti possono o non 
+possono fare (es. bloccare programmi, impostazioni ecc.) 
+Sono entrato in Tools > Active Directory Users and Computers.
+A ciascun utente ho assegnato una password provvisoria da cambiare al primo accesso, per 
+motivi di sicurezza.
+
+8)
+Successivamente, ho creato due gruppi: 
+a)VAR
+b)tradingfloor
+
+9)
+Creazione delle cartelle e assegnazione dei permessi 
+Dal File Explorer, ho creato due cartelle nel disco locale C:: 
+• bonificiclienti, con un file “bonifci.txt” 
+• operazionitrading, con un file “eurusdlong.txt” 
+
+10)
+Ho cliccato col tasto destro sulla cartella bonificiclienti > Properties > Sharing > 
+Advanced Sharing e selezionato “Share this folder”. 
+In Permissions, ho rimosso il gruppo Everyone (in questo modo, nessuno ha più accesso per 
+default) e messo che solo il var potesse vederli,dopodiche ho ripetuto la stessa operazioni per il gruppo tardingfloor in modo che solo questo potesse vedere le operazioni a mercato svolte.
+Concettualmente non è proprio corretto,ma mi sono accorto di questo strada facendo.
+
+11)
+Configurazione delle Group Policy 
+Blocco applicazioni 
+Per bloccare l’uso di alcune applicazioni, ho aperto Group Policy Management, selezionato 
+VAR e creato una nuova GPO chiamata Programmi bloccati.
+
+12)
+Seguendo il percorso User Configuration > Windows Settings > Security Settings > 
+Software Restriction Policies, ho impostato come predefinito il livello Disallowed, 
+bloccando tutti i programmi tranne uno. 
+
+13)
+Restrizioni sulle impostazioni di sistema 
+Tornando su VAR, ho riaperto la GPO Programmi bloccati e seguito il percorso: 
+Computer Configuration > Windows Settings > Security Settings > Local Policies > User 
+Rights Assignment 
+Qui ho modificato la policy Change the system time
+Stessa procedura per il gruppo trading floor
+
+A questo punto, la configurazione è completa: abbiamo un server MordorServer con Active 
+Directory funzionante, utenti e gruppi ben organizzati, cartelle protette, programmi controllati 
+e policy applicate per rafforzare la sicurezza del dominio.
+
+
+Installazione del client Windows 10 Pro su VirtualBox 
+
+1) Una volta terminata la configurazione del nostro server BANCAServer, apriamo windows pro 10 ed entriamo come client,nel mio caso jhonny travolta.
+Per semplificare l’operazione, utilizzo un file OVA già pronto, che trascino direttamente 
+nell’interfaccia di VirtualBox.
+Controllo e modifica delle impostazioni di rete e condivisione :
+ Prima di avviare la VM, clicco con il tasto destro sulla macchina importata e seleziono 
+Impostazioni. Qui attivo la Modalità Esperto, per avere il pieno controllo delle opzioni. 
+Procedo con le modifiche: 
+ Rete interna 
+ • Vado sulla scheda Rete 
+• Imposto Scheda 1 su Attiva scheda di rete 
+• Modalità di collegamento: seleziono Rete interna 
+• Nome della rete: uso lo stesso nome della rete del server (intnet) 
+
+2)
+ Appunti condivisi e Trascinamento file 
+
+ • Vado alla sezione Generale > Avanzate 
+• Imposto: 
+o Appunti condivisi su Bidirezionale 
+o Trascinamento file su Bidirezionale 
+
+3)
+Avvio del client Windows 10 
+ Una volta salvate le impostazioni, clicco su Avvia per accendere la macchina. Windows 10 si 
+carica e il desktop compare in pochi secondi e configuriamo IP.
+
+L’aggiunta al dominio BANCA.local, aprendo il Pannello di controllo, quindi Sistema 
+e sicurezza ed infine Sistema. Clicco su Cambia impostazioni e nella finestra Proprietà 
+del sistema, clicco su Cambia.
+sul nome del computer insrrisco PCbanca
+
+4)
+ Accesso al dominio come JHONNY TRAVOLTA
+Dopo il riavvio, compare la schermata di login. 
+posso scegliere di accedere con un account del dominio. 
+a. Clicco su Other User 
+b. Inserisco: 
+o Nome utente: JHONNY 
+o Password: quella temporanea impostata dall’amministratore 
+c. Al primo login, Windows chiederà di cambiare la password. Ne scelgo una nuova 
+(che l’amministratore non conoscerà, come da policy di sicurerezza.
+
+
+ULTIMA PARTE(no screen,avevo riavviato pc dimenticando di farli per questa parte ma spiego lo stesso)
+
+
+Test: Restrizione al cambio dell’ora di sistema
+sulla base della confihurazione che avevamo prestabilito prima di entare nel nuovo user,gli users del gruppo trading floor dovevamo essere impossibilitati cambiare la time zone,funzione che era possibile solo per amministartore o per VAR.
