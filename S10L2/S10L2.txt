@@ -1,0 +1,53 @@
+S10L2
+primo pacchetto
+Qual è il numero di porta TCP di origine?
+58904
+
+ ● Come classificheresti la porta di origine? 
+Dynamic and/or Private ports
+
+● Qual è il numero di porta TCP di destinazione?
+80
+
+ ● Come classificheresti la porta di destinazione? 
+well-known ports
+
+● Quale flag è impostato? 
+SYN
+
+● A quale valore è impostato il numero di sequenza relativo?
+è impostato a 0
+
+
+secondo pacchetto
+● Quali sono i valori delle porte di origine e destinazione? 
+origine 80 e destinazione 58904
+● Quali flag sono impostati? 
+SYN (Synchronize)
+ACK (Acknowledge)
+● A quali valori sono impostati i numeri relativi di sequenza e acknowledgment?
+Numero di sequenza (Seq): 0
+Numero di acknowledgment (Ack): 1
+
+
+
+
+terzo pacchetto
+Quale flag è impostato?
+ACK
+
+
+
+ cosa il comando -r?
+ricerca file e vedere informazioni
+
+
+tre metodi di ricerche utili per un amministratore di rete
+1. Filtro per Indirizzo IP Specifico (Sorgente o Destinazione o entrambi)
+2. Filtro per Protocollo e/o Porta Specifici
+3. Filtro per Errori o Condizioni Anomale di TCP (o altri protocolli)
+
+altri metodi di uso?
+Analisi delle Performance e della Latenza:
+ Monitoraggio della Sicurezza e Anomalia del Traffico:
+Analisi di Specifici Flussi di Conversazione:
