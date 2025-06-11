@@ -1,0 +1,143 @@
+S11L3
+Quali sono gli indirizzi MAC di origine e destinazione?
+
+origine (0:8:00:27:04:42:0f)
+destinazione (52:55:0a:00:02:03)
+
+A quali interfacce di rete sono associati questi indirizzi MAC?
+
+a)interfaccia associaya LL INDIRIZZO MAC DI origine
+b)interfaccia associata indirizzo mac di destinazione
+
+Quali sono gli indirizzi IP di origine e destinazione? 
+
+indirizzi IP sorgente:10.0.2.15
+indirizzo ip destinazione:10.0.2.3
+
+A quali interfacce di rete sono associati questi indirizzi IP?
+a)eth0
+b)'indirizzo IP di un server DNS (o un router/gateway che funge da server DNS) all'interno dell'ambiente di virtualizzazione
+
+Quali sono le porte di origine e destinazione? 
+
+Porta di Origine: 37360
+Porta di Destinazione: 53
+
+Qual è il numero di porta DNS predefinito?
+Il numero di porta DNS predefinito (standard o "well-known") è 53.
+
+Confrontare gli indirizzi MAC e IP nei risultati di Wireshark con gli indirizzi IP e MAC. Qual è la tua osservazione?
+
+l'osservazione chiave è che gli indirizzi MAC e IP nel frame mostrano una comunicazione a livello di collegamento dati e di rete tra due entità che sono molto probabilmente macchine virtuali all'interno dello stesso ambiente di virtualizzazione e sulla stessa sottorete locale, con l'host sorgente che effettua una query DNS all'host di destinazione.
+
+parte 3
+Quali sono gli indirizzi MAC e IP e i numeri di porta di origine e destinazione?
+Indirizzi MAC:
+
+MAC di Origine (Src): 52:55:0a:00:02:02
+MAC di Destinazione (Dst): 08:00:27:04:42:0f
+Indirizzi IP:
+
+IP di Origine (Src): 10.0.2.3
+IP di Destinazione (Dst): 10.0.2.15
+Numeri di Porta (UDP):
+
+Porta di Origine (Src Port): 53
+Porta di Destinazione (Dst Port): 37360
+ Come si confrontano con gli indirizzi nei pacchetti di query DNS?
+a)MAC di Origine	08:00:27:04:42:0f (VM Client)	52:55:0a:00:02:02 (VM DNS Server)
+b)MAC di Destinazione	52:55:0a:00:02:03 (VM DNS Server)	08:00:27:04:42:0f (VM Client)
+c)IP di Origine	10.0.2.15 (Client)	10.0.2.3 (DNS Server)	Gli indirizzi IP di origine e destinazione si sono invertiti.
+d)IP di Destinazione	10.0.2.3 (DNS Server)	10.0.2.15 (Client)	Invertiti.
+e)Porta di Origine	37360 (Effimera Client)	53 (DNS Server)	Le porte di origine e destinazione si sono invertite. Il server DNS risponde dalla porta 53.
+f)Porta di Destinazione	53 (DNS Server)	37360 (Effimera Client)	Invertite. Il client riceve la risposta sulla stessa porta effimera da cui ha inviato la query.
+g)Tipo di Pacchetto	DNS (query)	DNS (response)	Il pacchetto è passato da una query a una risposta, completando la transazione DNS.
+
+Il server DNS può fare query ricorsive?
+Sì, un server DNS può fare query ricorsive. Anzi, la capacità di eseguire query ricorsive è una funzione fondamentale di molti server DNS, in particolare quelli che fungono da resolver DNS per i client.
+
+
+Come si confrontano i risultati con quelli di nslookup?
+Per confrontare i risultati dell'output di nslookup che hai fornito con l'analisi dei pacchetti Wireshark precedenti (che riguardavano una singola query DNS per un dominio non specificato, ma probabilmente cisco.com o simile), possiamo fare le seguenti osservazioni:
+
+1. Indirizzi IP e Ruoli:
+Nslookup:
+
+Il client sta interrogando il server DNS 10.0.2.3.
+La risposta finale di nslookup fornisce gli indirizzi IP risolti per www.cisco.com  che sono 23.49.196.116 (IPv4) e 2a02:26f0:8d00:c9e::b33, 2a02:26f0:8d00:cb6::b33
+
+Wireshark (Frame 1 - Query & Frame 4 - Risposta):
+
+Query (Frame 1): IP di origine 10.0.2.15 (il tuo client) a IP di destinazione 10.0.2.3 (il server DNS).
+Risposta (Frame 4): IP di origine 10.0.2.3 (il server DNS) a IP di destinazione 10.0.2.15 (il tuo client).
+Confronto: C'è una perfetta corrispondenza. L'indirizzo 10.0.2.3 identificato da nslookup come "Server" è esattamente l'indirizzo IP di destinazione della query DNS e l'indirizzo IP di origine della risposta DNS che abbiamo analizzato con Wireshark. Questo conferma che 10.0.2.3 è il server DNS che il tuo sistema sta usando per risolvere i nomi. L'indirizzo 10.0.2.15 è il nostro client
+
+2. Tipo di Query e Risposta:
+Nslookup:
+
+L'output mostra una risoluzione completa e ricorsiva per www.cisco.com. Il server 10.0.2.3 ha fornito una "Non-authoritative answer", il che significa che 10.0.2.3 non è il server autorevole per cisco.com, ma ha eseguito la ricorsione per conto del tuo client e ha ottenuto la risposta dai server autorevoli (in questo caso, Akamai per Cisco).
+Wireshark (Frame 1 & Frame 4):
+
+Query (Frame 1): Domain Name System (query) con porta di destinazione 53.
+Risposta (Frame 4): Domain Name System (response) con porta di origine 53.
+Confronto: L'output di nslookup descrive il risultato della risoluzione DNS, mentre Wireshark mostra i pacchetti effettivi che costituiscono quella risoluzione. Wireshark conferma che la comunicazione avviene via UDP sulla porta 53, come previsto per il DNS. Se avessimo catturato l'intera transazione DNS per www.cisco.com con Wireshark, vedremmo la query dal client a 10.0.2.3 e la risposta di 10.0.2.3 al client contenente gli indirizzi IP finali e tutti i CNAME intermedi.
+
+3. Dettagli della Risoluzione (CNAMEs e Indirizzi Finali):
+Nslookup: Mostra l'intera catena di CNAMEs (Canonical Name) che portano da www.cisco.com a e2867.dsca.akamaiedge.net, e infine gli indirizzi IP (IPv4 e IPv6) associati a quest'ultimo nome. Questo è tipico dell'uso di Content Delivery Networks (CDN) come Akamai, che Cisco utilizza.
+Wireshark: In un'analisi del Frame 4 (la risposta DNS), espandendo la sezione "Domain Name System (response)" e poi "Answers", vedremmo proprio questi record: i vari CNAME e poi i record A (per IPv4) e AAAA (per IPv6) finali, esattamente come li mostra nslookup.
+
+Conclusione Generale:
+I risultati di nslookup sono una rappresentazione ad alto livello del processo di risoluzione DNS così come percepito dal client, mostrando il server interrogato e il risultato finale della risoluzione (e i passaggi intermedi come i CNAMEs).
+
+I risultati di Wireshark, d'altro canto, forniscono una visione a basso livello del traffico di rete effettivo, mostrando i singoli pacchetti che compongono la comunicazione DNS, inclusi gli indirizzi IP, MAC e le porte, e il fatto che si tratta di una query/risposta UDP sulla porta 53.
+
+In breve, i risultati si confrontano perfettamente e sono complementari: nslookup ti dice cosa è stato risolto e quale server ha risposto, mentre Wireshark ti mostra come quella risoluzione è avvenuta a livello di pacchetti sulla rete. L'output di nslookup è la conseguenza diretta del traffico DNS catturato e analizzato con Wireshark.
+
+
+
+1. Dai risultati di Wireshark, cos'altro puoi imparare sulla rete quando rimuovi il filtro DNS?
+
+Rimuovere il filtro dns (o qualsiasi filtro specifico) e osservare tutto il traffico catturato può rivelare una quantità enorme di informazioni sulla rete. Ecco alcune delle cose più significative che un amministratore (o un attaccante) può imparare:
+
+Protocolli in Uso e loro Percentuali:
+
+"Conversation Statistics" (Statistiche > Conversazioni): Mostra un riepilogo di tutte le conversazioni per indirizzi MAC, IP, porte TCP/UDP. Puoi vedere chi sta parlando con chi, quanto traffico generano e su quali porte.
+"Protocol Hierarchy Statistics" (Statistiche > Gerarchia dei Protocolli): Un grafico a torta o un elenco che mostra la percentuale di traffico occupata da ciascun protocollo (Ethernet, IP, TCP, UDP, HTTP, SSL/TLS, SMB, ecc.). Questo ti dà una panoramica immediata dei tipi di applicazioni e servizi più utilizzati sulla tua rete.
+Osservazione: Puoi scoprire se ci sono protocolli inattesi (es. P2P, gaming), o se un certo protocollo sta consumando molta più banda del previsto.
+Identificazione dei Dispositivi e degli Host:
+
+Indirizzi MAC e IP: Vedrai tutti gli indirizzi MAC e IP attivi sulla tua LAN. Puoi spesso dedurre il tipo di dispositivo dai prefissi MAC (Vendor OUI - come 08:00:27 per VirtualBox, 52:55:0a per KVM che abbiamo visto, o Cisco, Intel, Apple, ecc.).
+ARP (Address Resolution Protocol): Il traffico ARP rivela le corrispondenze tra indirizzi IP e MAC. Puoi identificare il gateway predefinito, altri server sulla LAN, e potenziali anomalie come ARP spoofing (se due IP diversi sono associati allo stesso MAC o viceversa in modo anomalo).
+DHCP (Dynamic Host Configuration Protocol): Se la cattura include l'inizio di una sessione per un nuovo dispositivo, vedrai le richieste e le risposte DHCP, rivelando l'indirizzo IP assegnato, il gateway, i server DNS, e altre opzioni di configurazione di rete.
+ICMP (Internet Control Message Protocol): Pacchetti ping (echo request/reply) e altri messaggi di errore (es. "Destination Unreachable") possono mappare la topologia della rete, identificare host attivi e non raggiungibili, e rilevare problemi di routing o firewall.
+
+Traffico Applicativo e Credenziali (se non crittografato):
+
+HTTP (Hypertext Transfer Protocol): Se il traffico non è crittografato (non HTTPS), puoi vedere quali siti vengono visitati, quali pagine vengono richieste, i form di login (e potenzialmente le credenziali in chiaro), i cookie, i parametri delle query, e i contenuti scaricati.
+FTP, Telnet, SNMP (versioni non sicure): Protocolli meno recenti o configurati male possono rivelare username, password, e configurazioni di rete in chiaro.
+SMB/CIFS (Server Message Block): Traffico di condivisione file Windows, che può rivelare nomi di file, cartelle, tentativi di autenticazione e potenziali vulnerabilità.
+Osservazione: Permette di monitorare l'uso della rete, rilevare comportamenti inappropriati o non autorizzati, e identificare gravi lacune di sicurezza (es. credenziali in chiaro).
+
+2. Come può un attaccante usare Wireshark per compromettere la sicurezza della tua rete?
+Un attaccante può usare Wireshark (o strumenti simili come tcpdump) in modo molto efficace per la ricognizione e, in alcuni casi, per compromettere direttamente la sicurezza di una rete. Ecco i modi principali:
+
+a)Ricognizione e Mappatura della Rete (Passive Reconnaissance):
+Scoperta di host attivi e topologia: Catturando il traffico ARP, DHCP, ICMP, l'attaccante può identificare gli indirizzi IP e MAC dei dispositivi sulla rete, inclusi router, server e workstation. Questo gli permette di costruire una mappa della topologia della rete senza inviare attivamente pacchetti sospetti.
+Identificazione di sistemi operativi e servizi: Analizzando le impronte digitali TCP/IP ("TCP/IP fingerprinting") nel traffico di handshake (es. dimensioni della finestra TCP, opzioni MSS) o analizzando i banner dei servizi (se visibili), un attaccante può dedurre il sistema operativo e le versioni dei software in esecuzione sugli host. Questo aiuta a trovare vulnerabilità note.
+Individuazione di server DNS, gateway, DHCP servers: Questi sono punti critici e spesso obiettivi primari.
+b)Rilevazione di Vulnerabilità e Informazioni Sensibili
+Credenziali in chiaro: Se la rete utilizza protocolli non crittografati come HTTP, Telnet, FTP, TFTP, POP3, IMAP, SNMPv1/v2, l'attaccante può catturare username e password, dati di login e altri dati sensibili direttamente dai pacchetti. Questa è una delle minacce più grandi.
+Session Hijacking: Se le sessioni web (o di altri protocolli) non usano HTTPS/SSL/TLS, l'attaccante può catturare i cookie di sessione e usarli per "dirottare" la sessione di un utente legittimo e accedere a risorse senza credenziali.
+Informazioni sull'architettura applicativa: Il traffico HTTP (anche parzialmente crittografato o non completamente SSL/TLS) può rivelare la struttura delle URL, i nomi dei parametri, le versioni delle applicazioni web, gli errori lato server, fornendo indizi preziosi per attacchi mirati.
+Dati sensibili non crittografati: Qualsiasi dato che viaggia sulla rete in chiaro, come numeri di carta di credito, informazioni personali, documenti aziendali, può essere intercettato.
+
+c)Identificazione di Comunicazioni e Relazioni:
+
+Quali sistemi comunicano tra loro: L'attaccante può mappare quali server parlano con quali database, quali workstation accedono a quali risorse. Questo può aiutare a capire il ruolo di ciascun host nella rete e pianificare attacchi più sofisticati.
+Traffico interno vs. esterno: Distinguere tra traffico generato internamente e quello diretto verso l'esterno può rivelare quali host sono "parlanti" con Internet e quali servizi sono accessibili dall'esterno.
+
+d)Preparazione per Attacchi Attivi:
+
+Analisi delle difese: Un attaccante può usare Wireshark per capire come funzionano i firewall, gli IPS/IDS (Intrusion Prevention/Detection Systems) e altre difese, osservando come reagiscono a certi tipi di traffico o errori.
+Identificazione di protocolli o porte aperte: Se una scansione porta attiva è troppo rumorosa, una cattura passiva può comunque rivelare quali porte sono in uso su un server.
+Comprendere il comportamento del traffico legittimo: Per un attaccante che vuole rimanere inosservato, capire il "rumore di fondo" della rete è cruciale per mascherare le proprie attività.
