@@ -1,0 +1,255 @@
+S11L5
+Parte 1
+1)avvio della VM windows 10 metaspotable e avvio del prompt comandi e della powershell
+
+2)in entramni i terminali digito comando dir
+Quali sono gli output del comando dir?
+a)Data e Ora dell'ultima modifica
+b)indicazione della directory
+c)Nome dell'Elemento
+differenze
+d)dimensione in byte(nel prompt comandi)
+e)permessi ai file nella powershell
+f)numero di file nel prompt comandi
+g)numero directrory sempre nel propmt comandi
+h)spazio occupato dai file(prompt comandi)
+i)spazio disponibile,sempre nel prompt comandi
+
+3)test usando comando ping,in questo caso ho scelto www.amazon.com
+a)in questo caso gli outupt sia sul prompt comandi che su powershell sono li stessi se non una leggera differenza nella RTT
+b)prima riga:indica che il comando sta per essere avviato e il nome host a cui il tuo sistema ha collegato
+c)[108.138.190.178]: Questo è l'indirizzo IP con cui stiamo pingando
+d)32 byte Indica la dimensione del payload 
+e)15 ms= Questo è il Round Trip Time (RTT),nella seconda e terza riga scende a 13 e poi nella quarta 14 ms(questo nel prompt comandi).
+Nella powershell invece i valori sono leggermente diversi(prima riga e ultima riga 13ms,nella seconda e nella terza 14ms)
+f)La time to live invece è la stessa=245
+g)Ping statistiche 108.138.190.178: Riepilogo dopo che tutti i pacchetti sono stati inviati/ricevuti,in questo caso indica che abbiamo trasmesso 4 pacchetti,ne sono stati ricevuti 4 e ne sono stati persi 0.
+h)infine il tempo approssimativo in millisecondi di andata e ritorno dei pacchetti evidenziando minimo e massimo.
+
+4)Nella powershell inserisco Get-Alias dir
+Qual è il comando PowerShell per dir? Get-ChildItem
+
+
+le caratteristiche principali e cosa le distingue dai comandi tradizionali:
+
+a)Struttura Nome "Verbo-Nome":
+Ogni cmdlet segue una convenzione di denominazione standard Verbo-Nome. Questo rende i comandi molto intuitivi e facili da indovinare.
+
+Verbo: Indica l'azione che il cmdlet esegue (es. Get, Set, New, Remove, Start, Stop, Move, Copy, Write, Read, Invoke).
+Nome: Indica la risorsa o l'oggetto su cui l'azione viene eseguita (es. Process, Service, Item, Computer, Content, Mailbox).
+Esempi:
+Get-Process: Ottiene informazioni sui processi in esecuzione.
+Set-Service: Modifica le proprietà di un servizio.
+New-Item: Crea un nuovo elemento.
+Remove-Item: Rimuove un elemento.
+Invoke-Command: Esegue un comando.
+
+b)Basati su .NET Framework:
+A differenza dei tradizionali eseguibili a riga di comando,
+possono interagire direttamente con gli oggetti .NET, offrendo una ricchezza di funzionalità e una maggiore coerenza.
+Sono più leggeri e veloci da caricare e usare.
+
+c)Gestione degli Oggetti (non solo testo):
+Una delle differenze più significative di PowerShell rispetto ai terminali tradizionali (come il Prompt dei Comandi o Bash) è che i cmdlet processano oggetti, non solo testo.
+
+Quando un cmdlet produce un output, non è una semplice stringa di testo, ma un oggetto strutturato (ad esempio, un oggetto "Processo" con proprietà come ID, nome, utilizzo della memoria).
+Questo permette una potente funzionalità chiamata "pipeline" (|), dove l'output (oggetto) di un cmdlet può essere passato come input (oggetto) al cmdlet successivo. Questo rende l'automazione molto più robusta e flessibile.
+
+d)Parametri Standard e Coerenti:
+I cmdlet utilizzano parametri con una sintassi standard (-NomeParametro Valore). Molti parametri sono comuni tra diversi cmdlet (es. -Name, -ComputerName, -Credential, -Force, -Confirm, -WhatIf), il che riduce la curva di apprendimento.
+
+Switch Parameters: Parametri che non richiedono un valore (es. -Force per forzare un'operazione, -Confirm per richiedere conferma).
+Help Integrato:
+PowerShell ha un sistema di aiuto robusto e integrato, accessibile tramite il cmdlet Get-Help.
+
+e)Get-Help Get-Process: Mostra la sintassi, la descrizione, i parametri e gli esempi per Get-Process.
+Get-Help Get-Process -Examples: Mostra solo esempi di utilizzo.
+Get-Help Get-Process -Full: Mostra tutte le informazioni disponibili.
+Update-Help: Permette di scaricare e aggiornare i file di aiuto localmente.
+
+d)Moduli PowerShell:
+I cmdlet sono organizzati in moduli. Un modulo è un pacchetto che contiene cmdlet, funzioni, variabili e altre risorse che possono essere caricate in una sessione PowerShell. Questo permette di estendere le funzionalità di PowerShell per gestire servizi specifici (es. Active Directory, Exchange, Azure, SQL Server).
+
+Get-Module: Elenca i moduli caricati.
+Import-Module NomeModulo: Carica un modulo specifico.
+
+In conclusione,per essere piu sintentici, i cmdlet di PowerShell sono la base della sua potenza e flessibilità. 
+Sono comandi strutturati, basati su oggetti, con una nomenclatura coerente e un sistema di aiuto integrato, progettati per semplificare l'automazione e l'amministrazione dei sistemi.
+
+Parte 5
+ Per vedere le opzioni disponibili per il comando netstat inserisco netstat -h, per visualizzare invece la tabella di routing con le rotte attive digito netstat -r.
+Qual è il gateway IPv4? 192.168.1.1
+
+Parte 6
+ Apro una seconda PowerShell con privilegi elevati. 
+a)Faccio clic su Start. Cerco PowerShell e scelgo la modalità come amministratore.
+b) Inserisco netstat -abno al prompt.
+c)Apro Gestione Attività, poi vado alla scheda Dettagli .
+ infine clicco sull'intestazione PID in modo che i PID siano in ordine.
+d)ho slezionato il file 636
+Quali informazioni puoi ottenere dalla scheda Dettagli e dalla finestra di dialogo Proprietà per il PID selezionato?
+a)tipo di file: applicazione(.exe)
+b)descrizione:app servizi e controller
+c)percorso,in questo caso nel disco C
+d)dimensioni
+e)data di creazione
+f)ultime modifiche
+invece nei dettagli possiamo vedere anche:
+a)la versione del file
+b)nome completo del prodotto
+c)copyright di Microsoft
+d)lingua
+e)nome originale del file
+
+Parte7
+a)apro il cestino ma non trovo nulla,cosi creo una nuova cartella e un documento txt,poi li elimino.
+b)In una console PowerShell, inserisco clear-recyclebin al prompt.
+risulato è che ha eliminato i file dal cestino cestino
+
+c)ricerca comandi che potrei usare per semplificare i miei compiti?
+1.1 ricognizione raccolta informazioni
+-Get-NetIPAddress: Mostra la configurazione IP delle interfacce di rete. Utile per identificare gli indirizzi IP e subnet locali, e per individuare configurazioni insolite.
+Cosi posso vedere gli attori sul palco.
+-Get-NetFirewallRule: Elenca le regole del Firewall di Windows. Permette di identificare quali porte sono aperte, quali programmi possono comunicare e se ci sono regole permissive o sospette.
+Cosi posso vedere dove sono eventuali punti deboli.
+-Get-WmiObject -Class Win32_StartupCommand / Get-CimInstance -ClassName Win32_StartupCommand: Elenca i programmi che si avviano con il sistema. Fondamentale per rilevare la persistenza di malware.
+Cosi posso vedere se siamo stati attaccati e da dove.
+-Get-LocalGroupMember -Group Administrators: Elenca i membri del gruppo "Administrators" locali. Cruciale per controllare chi ha privilegi elevati su una macchina.
+cosi guardo quali attori hanno certi permessi e risparmio tempo.
+
+1.2 Per monitoraggio e analisi dei log
+-Get-WinEvent: Il cmdlet più potente per leggere i log eventi di Windows (Event Viewer). Permette di filtrare eventi specifici per ID, livello, origine e tempo. Indispensabile per l'analisi forense.
+Per risparmiare tempo nella ricerca di un evento.
+-Get-Acl: Ottiene le liste di controllo degli accessi (ACL) di file, directory e chiavi di registro. Utile per verificare permessi anomali che potrebbero indicare una compromissione.
+
+1.3 Per gestione processi e servizi
+-Get-Process: Elenca tutti i processi in esecuzione.
+Esempio: Get-Process | Where-Object {$_.CPU -gt 100} per identificare processi con alto consumo di CPU (potenziale malware o script).
+-Stop-Process: Termina uno o più processi. Utile per bloccare l'esecuzione di malware o processi sospetti.
+
+1.4 Operazioni sui file system
+-Get-ChildItem -Recurse: Elenca ricorsivamente file e directory. Utile per cercare file con nomi sospetti, date di modifica anomale o estensioni insolite.
+
+
+Parte 8 di una lunga giornata d'estate(è gia estate?non ricordo quando inizia)
+Report sull'analisi del link
+a)informazioni generali:
+Panoramica:
+L'analisi di Any.Run del link https://github.com/MELITERRER/frew/blob/main/Jvczfhe.exe ha determinato un verdetto di "Attività dannose". Questo indica chiaramente che l'eseguibile, una volta aperto nell'ambiente sandbox, ha mostrato comportamenti riconducibili a un'azione malevola.
+
+b)analisi minacce
+L'analisi ha rilevato diverse attività altamente sospette e dannose associate all'eseguibile, che conferma òa prsenza  di "Attività dannose".
+
+Minacce Sospette Critiche:
+
+-Esecuzione Ritardata e Offuscamento: Il malware usa TIMEOUT.EXE per ritardare la sua esecuzione, una tattica comune per eludere i sistemi di rilevamento basati sul tempo. La rilevazione di .NET Reactor (dal tag precedente) conferma l'uso di offuscamento, rendendo più difficile l'analisi.
+
+-Esecuzione Comandi e Persistenza: Avvia cmd.exe per eseguire comandi arbitrari e il processo Muadnrd.exe si avvia da solo, indicando un meccanismo di persistenza per mantenere il controllo sul sistema.
+
+-Danneggiamento del Sistema: Il processo elimina l'eseguibile legittimo di Windows firefox.exe. Questa è un'azione estremamente distruttiva che mira a compromettere la funzionalità del sistema. L'applicazione stessa si arresta in modo anomalo, il che può essere un effetto collaterale di un'operazione malevola o un tentativo di evasione.
+
+-Comunicazione Anomala: InstallUtil.exe si connette a una porta insolita, un forte indicatore di comunicazione con un server di Comando e Controllo o di appropriamento di dati.
+
+Attività Informative Rilevanti:
+
+-Ricognizione del Sistema: Il malware raccoglie informazioni dettagliate sul sistema (lingue, GUID del computer, nome del computer, valori ambiente, impostazioni proxy), utili per adattare l'attacco o identificare la vittima.
+
+-Anti-Forensics: La disabilitazione dei log di traccia è un chiaro tentativo di nascondere le proprie azioni e ostacolare l'analisi forense.
+
+-Manipolazione del Registro: Il malware legge le chiavi del Registro di sistema relative a Microsoft Office e alle politiche software, potenzialmente per scoprire configurazioni o software installati.
+
+L'eseguibile non solo si avvia in modo furtivo, ma tenta anche di danneggiare il sistema, comunicare con server esterni in modo sospetto e nascondere le sue tracce.
+
+analisi:
+vczfhe.exe è il malware principale che viene esguito subito,che comporta l avvio di altri eseguibili come:installuti.exe,werfault,cdm.exe,timeout.exe.(come riportato nella slide dei processi)
+Viene scaricato anche un altro file malevolo di nome Muadnrd.exe,che avvia un blocco,inoltre da qui vengono poi scaricati altri eseguinili come conhost.exe e timeout.exe.
+
+
+Parte 9
+
+a)cos'è nmap?
+é uno scanner di rete.
+dalla definizione sul prompt:
+È uno strumento open-source per l'esplorazione di rete e l'auditing di sicurezza. 
+
+Per cosa viene utilizzato?
+È stato progettato per scansionare rapidamente grandi reti.
+ Nmap viene utilizzato per esempio per determinare quali host sono disponibili sulla rete, quali servizi  stanno offrendo, quali sistemi operativi stanno eseguendo, quali tipi di filtri di pacchetto/firewall sono in uso 
+
+Qual è il comando nmap usato usato nell esempio 1
+nmap -A -T4 scanme.nmap.org 
+
+Cosa fa l'opzione -A?
+è una scorciatoia potente per combinare più tipi di scansioni dettagliate, fornendo un output ricco di informazioni su un host target
+ e il comando -T4?
+aggiunge velocita alla scansione,è piu aggressiva e ha timeout piu brevi
+
+
+b)Quali porte e servizi sono aperti?
+
+-porta 21 tcp(File Transfer Protocol)software: vsftpd 2.0.8
+-porta 22 tcp (secure shell)software:OpenSSH 7.7 
+
+c)indirizzo ip:192.168.1.7/24 subnet mask 255.255.255.0
+La VM appartiene alla rete 192.168.1.0/24.
+
+Quanti host sono attivi?
+
+192.168.1.1
+192.168.1.2
+192.168.1.3
+192.168.1.5
+192.168.1.6 (anche se tutte le sue porte sono chiuse, l'host è stato rilevato come attivo)
+192.168.1.7
+192.168.1.17
+192.168.1.22
+192.168.1.30
+
+
+lo scopo del sito nmap.org?
+Aiutare le persone a conoscere Nmap e anche per testare e assicurarsi che la nostra installazione di Nmap  funzioni correttamente.
+
+Quali porte e servizi sono aperti?
+22(ssh),80(http),9929(nping),31337(tcpwrapped)
+
+Quali porte e servizi sono filtrati?
+996
+
+sistema operativo?
+linux
+
+Domanda di Riflessione Nmap è uno strumento potente per l'esplorazione e la gestione della rete. 
+Come può Nmap aiutare con la sicurezza della rete? 
+Come può Nmap essere usato da un attore malevolo come strumento nefasto?
+
+Nmap aiuta la sicurezza di rete permettendoti di: 
+
+a)Valutare delle Vulnerabilità tramite identificazioni di porte aperte o rilevamento servizi vulnerabii
+b) Fare Audit di Sicurezza e Penetration Testing tramite simulazioni di attacchi o verifica delle regole dei firewall
+c) Verificare configurazioni errate o non autorizzate
+d)gestire la rete,es:monitoraggio rete o rilevamento dispositivi
+
+
+La stessa potenza di Nmap che lo rende prezioso per la difesa, lo rende anche un'arma formidabile nelle mani di un attaccante perché gli permette di:
+a)fare ricognizione scoprendo obiettivi,identificare punti deboli o conoscere il sistema operativo per usare exploit specifici
+b)gli permette di preparare bene un exploitation
+c)permette una mappatura per attacchi mirati
+
+conclusione della riflessione:
+è uno strumento,come puo essere un coltello,che puo essere usato per cose costruttive o per fare del male.
+l uso che se ne fa è strettamente collegato all etica della persona.
+
+Parte 10
+
+a)Quali sono i due indirizzi IP coinvolti in questo attacco di SQL injection in base alle 
+informazioni visualizzate?
+10.0.2.4 e 10.0.2.15
+
+b)nome versione?
+ 5.7.12-0ubuntu1.1
+
+c)Quale utente ha l'hash della password di 8d3533d75ae2c3966d7e0d4fcc69216b?
+1337
+
+d)in chiaro la pw?
+charley
